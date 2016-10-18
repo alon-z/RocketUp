@@ -3,7 +3,6 @@ require "rocket/rocket"
 function love.load()
   -- Settings
   love.graphics.setBackgroundColor( 50, 150, 200, 255 )
-  image = love.graphics.newImage("cuteCake.png")
   rc = Rocket(love.graphics.newImage("simpleRocket.png"), 1000, 900)
   love.graphics.setBackgroundColor(0, 118, 207)
   font = love.graphics.newImageFont("coolFont.png",
@@ -40,9 +39,6 @@ end
 
 function love.draw()
   rc:draw()
-  love.graphics.setColor(255, 255, 255)
-  love.graphics.draw(image,cake_x,cake_y)
-  love.graphics.printf("Drag the cake to move it", 50, 300, 150, 'center', -0.5, 3, 3)
   love.graphics.setColor(72, 160, 14)
   love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape:getPoints()))
   love.graphics.setColor(193, 47, 14)
@@ -51,14 +47,13 @@ function love.draw()
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)
-  set_cake_position(x,y)
+  rc:touchpressed(id, x)
 end
 
 function love.touchmoved(id, x, y, dx, dy, pressure)
-  set_cake_position(x,y)
+  -- body...
 end
 
-function set_cake_position(x,y)
-  cake_x = x - image:getWidth() / 2
-  cake_y = y - image:getHeight() / 2
+function love.touchreleased(id, x, y, dx, dy, pressure)
+  rc:touchreleased(id, x, y, dx, dy, pressure)
 end

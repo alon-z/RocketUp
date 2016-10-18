@@ -35,24 +35,46 @@ function Rocket:_init(image, x, y)
   self.tank = Tank()
   self.engine = Engine()
   self.grav = 0.5
+  self.wind = 0.5
 end
 
 function Rocket:update(dt)
   accs = self.engine:use(self.tank)
   self.xvel = self.xvel + accs*dt * math.sin(self.rotation)
   self.yvel = self.yvel + accs*dt * math.cos(self.rotation)
-  self.x = self.x - self.xvel*dt
+  self.x = self.x + self.xvel*dt
   self.y = self.y - self.yvel*dt
   self.yvel = self.yvel - self.grav
+  if self.xvel > 0 then self.xvel = self.xvel - self.wind end
+  if self.xvel < 0 then self.xvel = 0 end
 
   if self.tank then
     self.tank:update()
   end
+
+  if self.needToTurnLeft then self:left(dt) end
+  if self.needToTurnRight then self:right(dt) end
 end
 
 function Rocket:right(dt)
   -- rotate clockwise
-  --self.rotation = self.rotation + ANGACCEL*dt
+  self.rotation = self.rotation + ANGACCEL*dt
+end
+
+function Rocket:left(dt)
+  -- rotate unclockwise
+  self.rotation = self.rotation - ANGACCEL*dt
+end
+
+function Rocket:touchpressed(id, x)
+  width = love.graphics.getWidth()
+  if x <= width/2 then self.needToTurnLeft = true else
+    self.needToTurnRight = true end
+end
+
+function Rocket:touchreleased(id)
+  self.needToTurnLeft = false
+  self.needToTurnRight = false
 end
 
 function Rocket:draw()

@@ -13,7 +13,7 @@ setmetatable(Tank, {
 })
 
 function Tank:_init()
-  self.amount = 1000
+  self.amount = 90000
   self.amountFull = self.amount
   self.icon = Icon(love.graphics.newImage("fuel.png"), 100, 100, 2 , self.amountFull)
 end

@@ -1,0 +1,12 @@
+- Add crash animation:
+  - Ground damage
+  - Smoke
+  - Explosion
+- Add clouds to the background (Rocket will go behind them to create 3d world elusion)
+- Fix score
+
+1. Fix Camera and World dimensions
+2. Add multiple tank functionality
+3. Add rocket inventory system
+4. Store menu system
+5. Check settings

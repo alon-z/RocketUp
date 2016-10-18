@@ -15,9 +15,9 @@ function Settings:_init(text, x, y, font, scale, color, limit, aligen)
   -- Settings
   love.graphics.setDefaultFilter( 'nearest', 'nearest' )
   self.backroundColor = {50, 150, 200, 255}
-  font = love.graphics.newImageFont("coolFont.png",
+  self.font = love.graphics.newImageFont("coolFont.png",
     " abcdefghijklmnopqrstuvwxyz" ..
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ0" ..
     "123456789.,!?-+/():;%&`'*#=[]\"")
-  love.graphics.setFont(font, 27)
+  love.graphics.setFont(self.font, 27)
 end

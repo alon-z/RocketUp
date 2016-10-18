@@ -10,27 +10,25 @@ setmetatable(Text, {
   end,
 })
 
-function Text:_init(text, x, y, font, scale, color, limit, aligen)
-  self.text = text
+function Text:_init(text, x, y, font, scale, color, cam)
+  self.text = love.graphics.newText( font or settings.font, text )
   self.x = x
   self.y = y
-  --self.font = font
   self.color = color or {255, 255, 255, 255}
   self.scale = scale or 5
-  self.limit = limit or 999
-  self.aligen = aligen or "left"
+  self.cam = cam
 end
 
 function Text:draw ()
-  offsetX, offsetY = cam:getVisibleCorners()
-  love.graphics.setColor(self.color)
-  if self.font then
-    --love.graphics.draw(self.image,self.x+offsetX, self.y+offsetY,math.rad(0),self.scale, self.scale, self.image:getWidth()/2, self.image:getHeight()/2)
-  else
-    love.graphics.printf( self.text, self.x+offsetX, self.y+offsetY, self.limit, self.align, 0, self.scale, self.scale )
+  offsetX, offsetY = 0,0
+  if self.cam then
+    offsetX, offsetY = cam:getVisibleCorners()
   end
+
+  love.graphics.setColor(self.color)
+  love.graphics.draw( self.text, self.x+offsetX, self.y+offsetY, 0, self.scale, self.scale)
 end
 
 function Text:update (text)
-  self.text = text
+  self.text:set(text)
 end

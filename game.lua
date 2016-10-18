@@ -15,7 +15,7 @@ setmetatable(Game, {
   end,
 })
 
-function Game:_init(Game, x, y, font, scale, color, limit, aligen)
+function Game:_init()
   -- Physics
   love.physics.setMeter(64)
   world = love.physics.newWorld(0, 9.81*64, true)
@@ -31,11 +31,11 @@ function Game:_init(Game, x, y, font, scale, color, limit, aligen)
   objects.ball.fixture = love.physics.newFixture(objects.ball.body, objects.ball.shape, 1)
   objects.ball.fixture:setRestitution(0.9)
 
-  -- GUI
-  hight = Text("Hight: ", 1300, 100)
-
   -- Camera
   cam = gamera.new(0,0,10000,9000)
+
+  -- GUI
+  hight = Text("Hight: ", 1300, 100, settings.font, 2, {255,255,255,255}, cam)
 end
 
 function Game:draw()

@@ -1,10 +1,11 @@
 require "settings"
 require "game"
-require "gui/text"
+require "gui/button"
 
 function love.load()
   settings = Settings()
-  mygame = Game()
+  --mygame = Game()
+  startButton = Button("Start", love.graphics:getWidth()/2,600, settings.font, 10)
 end
 
 function love.update(dt)
@@ -13,10 +14,17 @@ end
 
 function love.draw()
   if mygame then mygame:draw() end
+  if startButton then startButton:draw() end
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)
   if mygame then mygame:touchpressed(id, x, y, dx, dy, pressure) end
+  if startButton then
+    if startButton:touchpressed(id, x, y, dx, dy, pressure) then
+      mygame = Game()
+      startButton = nil
+    end
+  end
 end
 
 function love.touchmoved(id, x, y, dx, dy, pressure)

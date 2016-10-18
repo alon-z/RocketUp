@@ -39,11 +39,14 @@ function Rocket:_init(image, x, y, world, firePNG)
 end
 
 function Rocket:update(dt)
-  accs = self.engine:use(self.tank)
-  local angle = self.body:getAngle()
-  local xf = math.cos(angle) * accs
-  local yf = math.sin(angle) * accs
-  self.body:applyForce(yf, -xf)
+  velx, vely = self.body:getLinearVelocity( )
+  if vely <= 25 then
+    accs = self.engine:use(self.tank)
+    local angle = self.body:getAngle()
+    local xf = math.cos(angle) * accs
+    local yf = math.sin(angle) * accs
+    self.body:applyForce(yf, -xf)
+  end
 
   if self.tank then
     self.tank:update()
@@ -76,14 +79,10 @@ function Rocket:touchreleased(id)
 end
 
 function Rocket:draw()
-  love.graphics.reset()
-  love.graphics.translate(self.body:getPosition())
-  love.graphics.rotate(self.body:getAngle())
   love.graphics.setColor(255, 255, 255, 255)
-  x1,y1 = self.shape:getPoints()
-  love.graphics.draw(self.image,x1,y1)
-  self.fireAnimation:draw(self.firePNG,8*x1/16,-y1-5,0,2.5,2)
-  love.graphics.reset()
+  add1,add2 = self.body:getWorldCenter()
+  love.graphics.draw(self.image,add1,add2,self.body:getAngle(),1,1,self.image:getWidth()/2,self.image:getHeight()/2)
+  self.fireAnimation:draw(self.firePNG,add1,add2,self.body:getAngle(),2,2,self.image:getWidth()/8-2,-(self.image:getHeight()/4-4))
 
   if self.tank then
     self.tank:draw()

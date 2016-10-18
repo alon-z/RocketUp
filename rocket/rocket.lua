@@ -1,6 +1,7 @@
 -- rocket.lua
 require "rocket/tank"
 require "rocket/engine"
+local anim8 = require "liberies/anim8"
 
 -- Properties
 -- Static
@@ -25,28 +26,24 @@ setmetatable(Rocket, {
 -- image = love.image type == default is nil
 -- x,y of top left == default is 0
 --
-function Rocket:_init(image, x, y)
-  self.image = image or nil
-  self.x = x or 0
-  self.y = y or 0
-  self.xvel = 0
-  self.yvel = 0
-  self.rotation = 0
+function Rocket:_init(image, x, y, world, firePNG)
+  self.image = image
+  self.firePNG =firePNG
+  self.body = love.physics.newBody( world, x, y, "dynamic" )
+  self.shape = love.physics.newRectangleShape( self.image:getWidth(), self.image:getHeight() )
+  self.fixture = love.physics.newFixture( self.body, self.shape, 1 )
   self.tank = Tank()
   self.engine = Engine()
-  self.grav = 0.5
-  self.wind = 0.5
+  local g16 = anim8.newGrid(16, 16, firePNG:getWidth(), firePNG:getHeight())
+  self.fireAnimation = anim8.newAnimation(g16('1-5',1), 0.1)
 end
 
 function Rocket:update(dt)
   accs = self.engine:use(self.tank)
-  self.xvel = self.xvel + accs*dt * math.sin(self.rotation)
-  self.yvel = self.yvel + accs*dt * math.cos(self.rotation)
-  self.x = self.x + self.xvel*dt
-  self.y = self.y - self.yvel*dt
-  self.yvel = self.yvel - self.grav
-  if self.xvel > 0 then self.xvel = self.xvel - self.wind end
-  if self.xvel < 0 then self.xvel = 0 end
+  local angle = self.body:getAngle()
+  local xf = math.cos(angle) * accs
+  local yf = math.sin(angle) * accs
+  self.body:applyForce(yf, -xf)
 
   if self.tank then
     self.tank:update()
@@ -54,16 +51,17 @@ function Rocket:update(dt)
 
   if self.needToTurnLeft then self:left(dt) end
   if self.needToTurnRight then self:right(dt) end
+  self.fireAnimation:update(dt)
 end
 
 function Rocket:right(dt)
   -- rotate clockwise
-  self.rotation = self.rotation + ANGACCEL*dt
+  self.body:applyTorque(10000)
 end
 
 function Rocket:left(dt)
   -- rotate unclockwise
-  self.rotation = self.rotation - ANGACCEL*dt
+  self.body:applyTorque(-10000)
 end
 
 function Rocket:touchpressed(id, x)
@@ -79,10 +77,12 @@ end
 
 function Rocket:draw()
   love.graphics.reset()
-  love.graphics.translate(self.x, self.y)
-  love.graphics.rotate(self.rotation)
+  love.graphics.translate(self.body:getPosition())
+  love.graphics.rotate(self.body:getAngle())
   love.graphics.setColor(255, 255, 255, 255)
-  love.graphics.draw(self.image,0,0)
+  x1,y1 = self.shape:getPoints()
+  love.graphics.draw(self.image,x1,y1)
+  self.fireAnimation:draw(self.firePNG,8*x1/16,-y1-5,0,2.5,2)
   love.graphics.reset()
 
   if self.tank then

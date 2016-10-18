@@ -3,7 +3,6 @@ require "rocket/rocket"
 function love.load()
   -- Settings
   love.graphics.setBackgroundColor( 50, 150, 200, 255 )
-  rc = Rocket(love.graphics.newImage("simpleRocket.png"), 1000, 900)
   love.graphics.setBackgroundColor(0, 118, 207)
   font = love.graphics.newImageFont("coolFont.png",
     " abcdefghijklmnopqrstuvwxyz" ..
@@ -20,9 +19,10 @@ function love.load()
   love.physics.setMeter(64)
   world = love.physics.newWorld(0, 9.81*64, true)
   objects = {}
+  objects.rc = Rocket(love.graphics.newImage("simpleRocket.png"), 950, 900, world, love.graphics.newImage("rocket/fireAnime.png"))
   objects.ground = {}
-  objects.ground.body = love.physics.newBody(world, 650/2, 650-50/2)
-  objects.ground.shape = love.physics.newRectangleShape(650, 50)
+  objects.ground.body = love.physics.newBody(world, 0, 1050)
+  objects.ground.shape = love.physics.newRectangleShape(10000, 50)
   objects.ground.fixture = love.physics.newFixture(objects.ground.body, objects.ground.shape)
   objects.ball = {}
   objects.ball.body = love.physics.newBody(world, 650/2, 650/2, "dynamic")
@@ -33,12 +33,12 @@ end
 
 function love.update(dt)
   world:update(dt)
-  rc:update(dt)
+  objects.rc:update(dt)
   --rc:right(dt)
 end
 
 function love.draw()
-  rc:draw()
+  objects.rc:draw()
   love.graphics.setColor(72, 160, 14)
   love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape:getPoints()))
   love.graphics.setColor(193, 47, 14)
@@ -47,7 +47,7 @@ function love.draw()
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)
-  rc:touchpressed(id, x)
+  objects.rc:touchpressed(id, x)
 end
 
 function love.touchmoved(id, x, y, dx, dy, pressure)
@@ -55,5 +55,5 @@ function love.touchmoved(id, x, y, dx, dy, pressure)
 end
 
 function love.touchreleased(id, x, y, dx, dy, pressure)
-  rc:touchreleased(id, x, y, dx, dy, pressure)
+  objects.rc:touchreleased(id, x, y, dx, dy, pressure)
 end

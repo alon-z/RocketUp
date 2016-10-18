@@ -1,4 +1,6 @@
 -- tank.lua
+require "gui/icon"
+
 Tank = {}
 Tank.__index = Tank
 
@@ -11,7 +13,9 @@ setmetatable(Tank, {
 })
 
 function Tank:_init()
-  self.amount = 400
+  self.amount = 1000
+  self.amountFull = self.amount
+  self.icon = Icon(love.graphics.newImage("fuel.png"), 100, 100, 2 , self.amountFull)
 end
 
 function Tank:use(amount)
@@ -21,4 +25,12 @@ function Tank:use(amount)
     self.amount = self.amount - amount
   end
   return true
+end
+
+function Tank:draw()
+  self.icon:draw()
+end
+
+function Tank:update()
+  self.icon:update(self.amount)
 end

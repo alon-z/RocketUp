@@ -11,7 +11,7 @@ setmetatable(Engine, {
 })
 
 function Engine:_init()
-  self.power = 400
+  self.power = 10
 end
 
 function Engine:use(tank)

@@ -43,23 +43,16 @@ function Rocket:update(dt)
   self.yvel = self.yvel + accs*dt * math.cos(self.rotation)
   self.x = self.x - self.xvel*dt
   self.y = self.y - self.yvel*dt
-  --self.xvel = self.xvel - self.grav
   self.yvel = self.yvel - self.grav
-end
 
-function Rocket:push(dt)
-  self.xvel = self.xvel + ACCELERATION*dt * math.sin(self.rotation)
-  self.yvel = self.yvel + ACCELERATION*dt * math.cos(self.rotation)
-end
-
-function Rocket:pull(dt)
-  self.xvel = self.xvel - ACCELERATION*dt * math.sin(self.rotation)
-  self.yvel = self.yvel - ACCELERATION*dt * math.cos(self.rotation)
+  if self.tank then
+    self.tank:update()
+  end
 end
 
 function Rocket:right(dt)
   -- rotate clockwise
-  self.rotation = self.rotation + ANGACCEL*dt
+  --self.rotation = self.rotation + ANGACCEL*dt
 end
 
 function Rocket:draw()
@@ -69,4 +62,8 @@ function Rocket:draw()
   love.graphics.setColor(255, 255, 255, 255)
   love.graphics.draw(self.image,0,0)
   love.graphics.reset()
+
+  if self.tank then
+    self.tank:draw()
+  end
 end

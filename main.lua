@@ -2,6 +2,7 @@ require "rocket/rocket"
 
 function love.load()
   -- Settings
+  love.graphics.setBackgroundColor( 50, 150, 200, 255 )
   image = love.graphics.newImage("cuteCake.png")
   rc = Rocket(love.graphics.newImage("simpleRocket.png"), 1000, 900)
   love.graphics.setBackgroundColor(0, 118, 207)
@@ -34,7 +35,7 @@ end
 function love.update(dt)
   world:update(dt)
   rc:update(dt)
-  rc:right(dt)
+  --rc:right(dt)
 end
 
 function love.draw()
@@ -46,6 +47,7 @@ function love.draw()
   love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape:getPoints()))
   love.graphics.setColor(193, 47, 14)
   love.graphics.circle("fill", objects.ball.body:getX(), objects.ball.body:getY(), objects.ball.shape:getRadius())
+  love.graphics.setBackgroundColor( 50, 150, 200, 255 )
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)

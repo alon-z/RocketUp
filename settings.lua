@@ -20,4 +20,6 @@ function Settings:_init(text, x, y, font, scale, color, limit, aligen)
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ0" ..
     "123456789.,!?-+/():;%&`'*#=[]\"")
   love.graphics.setFont(self.font, 27)
+  self.worldWidth = 4000
+  self.worldHeight = 4000
 end

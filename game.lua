@@ -1,6 +1,8 @@
--- Game.lua
+-- Game.lua ----------------------------------------------------------------------------------------
 require "settings"
 require "rocket/rocket"
+require "ground/ground"
+require "sky/cloud"
 require "gui/text"
 local gamera =require "liberies/gamera"
 
@@ -14,58 +16,70 @@ setmetatable(Game, {
     return self
   end,
 })
-
+----------------------------------------------------------------------------------------------------
 function Game:_init()
+  -- Camera
+  cam = gamera.new(0,0,settings.worldWidth,settings.worldHeight)
+  cam:setWindow(0,0,love.graphics.getWidth(),love.graphics.getHeight())
+
   -- Physics
   love.physics.setMeter(64)
   world = love.physics.newWorld(0, 9.81*64, true)
   objects = {}
-  objects.rc = Rocket(love.graphics.newImage("simpleRocket.png"), 950, 900, world, love.graphics.newImage("rocket/fireAnime.png"))
-  objects.ground = {}
-  objects.ground.body = love.physics.newBody(world, 0, 1050)
-  objects.ground.shape = love.physics.newRectangleShape(10000, 50)
-  objects.ground.fixture = love.physics.newFixture(objects.ground.body, objects.ground.shape)
-  objects.ball = {}
-  objects.ball.body = love.physics.newBody(world, 650/2, 650/2, "dynamic")
-  objects.ball.shape = love.physics.newCircleShape(20)
-  objects.ball.fixture = love.physics.newFixture(objects.ball.body, objects.ball.shape, 1)
-  objects.ball.fixture:setRestitution(0.9)
+  objects.rc = Rocket(love.graphics.newImage("simpleRocket.png"), settings.worldWidth/2, settings.worldHeight-50, world, love.graphics.newImage("rocket/fireAnime.png"))
+  objects.ground = Ground(0,settings.worldHeight,settings.worldWidth,50,{90,190,90,255},world)
 
-  -- Camera
-  cam = gamera.new(0,0,10000,9000)
+  -- Backrounud
+  objects.cloud1 = Cloud(love.graphics.newImage("sky/clouds.png"),settings.worldWidth/2, settings.worldHeight-200)
 
   -- GUI
-  hight = Text("Hight: ", 1300, 100, settings.font, 2, {255,255,255,255}, cam)
+  hight = Text("Hight: ", 100, 100, settings.font, 2, {255,255,255,255}, cam)
 end
 
 function Game:draw()
   cam:draw(function(l,t,w,h)
-    objects.rc:draw()
+    for num, object in pairs(objects) do
+      if object.draw then
+          object:draw()
+        end
+    end
     hight:draw()
-    love.graphics.setColor(72, 160, 14)
-    love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape:getPoints()))
-    love.graphics.setColor(193, 47, 14)
-    love.graphics.circle("fill", objects.ball.body:getX(), objects.ball.body:getY(), objects.ball.shape:getRadius())
     love.graphics.setBackgroundColor(settings.backroundColor)
   end)
 end
 
 function Game:update(dt)
   world:update(dt)
-  objects.rc:update(dt)
+  for num, object in pairs(objects) do
+    if object.update then
+        object:update(dt)
+      end
+  end
   holder, hightN = objects.rc.body:getWorldCenter()
-  hight:update("Hight: "..hightN)
+  hight:update("X: "..holder.."Y: "..hightN)
   cam:setPosition(objects.rc.body:getPosition())
 end
 
 function Game:touchpressed(id, x)
-  objects.rc:touchpressed(id, x)
+  for num, object in pairs(objects) do
+    if object.touchpressed then
+        object:touchpressed(id, x)
+      end
+  end
 end
 
 function Game:touchmoved()
-  -- body...
+  for num, object in pairs(objects) do
+    if object.touchmoved then
+        object:touchmoved()
+      end
+  end
 end
 
 function Game:touchreleased(id)
-  objects.rc:touchreleased(id)
+  for num, object in pairs(objects) do
+    if object.touchreleased then
+        object:touchreleased(id)
+      end
+  end
 end

@@ -2,7 +2,9 @@
   - Ground damage
   - Smoke
   - Explosion
-- Add clouds to the background (Rocket will go behind them to create 3d world elusion)
+--- Done -- Add clouds to the background (Rocket will go behind them to create 3d world elusion) --
+- Add more clouds
+- Add storm
 - Fix score
 
 --- Done -- 1. Fix Camera and World dimensions --

@@ -2,7 +2,7 @@
 require "settings"
 require "rocket/rocket"
 require "ground/ground"
-require "sky/cloud"
+require "sky/sky"
 require "gui/text"
 local gamera =require "liberies/gamera"
 
@@ -30,7 +30,7 @@ function Game:_init()
   objects.ground = Ground(0,settings.worldHeight,settings.worldWidth,50,{90,190,90,255},world)
 
   -- Backrounud
-  objects.cloud1 = Cloud(love.graphics.newImage("sky/clouds.png"),settings.worldWidth/2, settings.worldHeight-200)
+  objects.sky = Sky(50,0,settings.worldWidth-100, settings.worldHeight-100,love.graphics.newImage("sky/clouds.png"),50)
 
   -- GUI
   hight = Text("Hight: ", 100, 100, settings.font, 2, {255,255,255,255}, cam)
